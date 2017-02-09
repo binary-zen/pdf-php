@@ -1337,6 +1337,7 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                 }
                 // patch #9 end
                 // this function will move the start of the table to a new page if it does not fit on this one
+                $y += 10;
                 $headingHeight = $this->ezTableColumnHeadings($cols,$pos,$maxWidth,$height,$descender,$options['rowGap'],$options['fontSize'],$y,$options);
                 $y0 = $y+$headingHeight+$options['rowGap'];
                 $y1 = $y - $options['rowGap']*2;
@@ -1351,7 +1352,12 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                 if (isset($options['shadeHeadingCol']) && count($options['shadeHeadingCol']) == 3){
                     $this->closeObject();
                     $this->setColor($options['shadeHeadingCol'][0],$options['shadeHeadingCol'][1],$options['shadeHeadingCol'][2],1);
+                    $x0 -= 5;
+                    $y0 += 6;
+                    $x1 += 5;
                     $this->filledRectangle($x0-$options['gap']/2,$y+$descender,$x1-$x0,($y0 - $y - $descender));
+                    $this->setStrokeColor($options['outlineHeadingCol'][0],$options['outlineHeadingCol'][1],$options['outlineHeadingCol'][2],1);
+                    $this->rectangle($x0-$options['gap']/2,$y+$descender,$x1-$x0,($y0 - $y - $descender));
                     $this->reopenObject($textHeadingsObjectId);
                     $this->closeObject();
                     $this->restoreState();
@@ -1405,6 +1411,11 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                 }
 
                 $cnt++;
+                if (
+                    (isset($options['showRows']) && ($options['showRows']==1)) ||
+                    !isset($options['showRows'])
+                ) {
+
                 // the transaction support will be used to prevent rows being split
                 if ($options['splitRows']==0){
                     $pageStart = $this->ezPageCount;
@@ -1493,6 +1504,7 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                             $firstLine=1;
                             $y -= $height;
                         }
+
                         $newRow=0;
                         // write the actual data
                         // if these cells need to be split over a page, then $newPage will be set, and the remaining
@@ -1648,7 +1660,7 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                     $this->ezNewPage();
                     break;
                 }
-
+}
             } // end of foreach ($data as $row)
 
         } // end of while ($abortTable)
@@ -1665,6 +1677,7 @@ define('EZ_GRIDLINE_COLUMNS', 1);
             }
              $this->ezTableDrawLines($pos,$options['gap'], $options['rowGap'],$x0,$x1,$y0,$y1,$y2,$options['lineCol'],$options['innerLineThickness'],$options['outerLineThickness'], $options['gridlines']);
         }
+
         // close the object for drawing the text on top
         $this->closeObject();
         $this->restoreState();
