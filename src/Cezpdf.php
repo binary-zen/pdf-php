@@ -1337,7 +1337,9 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                 }
                 // patch #9 end
                 // this function will move the start of the table to a new page if it does not fit on this one
-                $y += 10;
+                if (isset($options['headingY0Offset'])){
+                    $y += $options['headingY0Offset'];
+                }
                 $headingHeight = $this->ezTableColumnHeadings($cols,$pos,$maxWidth,$height,$descender,$options['rowGap'],$options['fontSize'],$y,$options);
                 $y0 = $y+$headingHeight+$options['rowGap'];
                 $y1 = $y - $options['rowGap']*2;
@@ -1352,9 +1354,15 @@ define('EZ_GRIDLINE_COLUMNS', 1);
                 if (isset($options['shadeHeadingCol']) && count($options['shadeHeadingCol']) == 3){
                     $this->closeObject();
                     $this->setColor($options['shadeHeadingCol'][0],$options['shadeHeadingCol'][1],$options['shadeHeadingCol'][2],1);
-                    $x0 -= 5;
-                    $y0 += 6;
-                    $x1 += 5;
+                    if (isset($options['headingX0Offset'])){
+                        $x0 += $options['headingX0Offset'];
+                    }
+                    if (isset($options['headingY1Offset'])){
+                        $y0 += $options['headingY1Offset'];
+                    }
+                    if (isset($options['headingX1Offset'])){
+                        $x1 += $options['headingX1Offset'];
+                    }
                     $this->filledRectangle($x0-$options['gap']/2,$y+$descender,$x1-$x0,($y0 - $y - $descender));
                     $this->setStrokeColor($options['outlineHeadingCol'][0],$options['outlineHeadingCol'][1],$options['outlineHeadingCol'][2],1);
                     $this->rectangle($x0-$options['gap']/2,$y+$descender,$x1-$x0,($y0 - $y - $descender));
